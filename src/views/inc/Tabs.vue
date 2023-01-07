@@ -44,6 +44,9 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+/*将新加标签按钮隐藏*/
+.el-tabs__header > .el-tabs__new-tab{
+    display: none !important;
+}
 </style>

@@ -18,12 +18,12 @@
                 </el-form-item>
 
                 <el-form-item label="密码" prop="password" style="width: 350px">
-                    <el-input v-model="loginForm.password"/>
+                    <el-input type="password" v-model="loginForm.password"/>
                 </el-form-item>
 
                 <el-form-item label="验证码" prop="code" style="width: 350px">
-                    <el-input v-model="loginForm.code" style="width: 150px; float:left;"/>
-                    <el-image :src="captchaImg" class="captchaImg"></el-image>
+                    <el-input v-model="loginForm.code" style="width: 130px; float:left;"/>
+                    <el-image :src="captchaImg" class="captchaImg" @click="getCaptcha"></el-image>
                 </el-form-item>
 
                 <el-form-item>
@@ -37,6 +37,7 @@
 
 <script>
 import request from "@/request";
+import qs from "qs";
 
 export default {
     name: "Login",
@@ -68,7 +69,8 @@ export default {
             this.$refs[formName].validate((valid) => { // 获取注册在ref中的元素，并对表单做校验
                 if (valid) { // 校验成功
                     //进行登录
-                    request.post('/login', this.loginForm).then(res => {
+                    console.log(this.loginForm)
+                    request.post('/login?' + qs.stringify(this.loginForm)).then(res => {
                         const jwt = res.headers['authorization']
                         console.log('jwt:',jwt)
                         this.$store.commit('SET_TOKEN', jwt)
@@ -88,6 +90,7 @@ export default {
                 // console.log('/captcha',res)
                 this.loginForm.token = res.data.data.token
                 this.captchaImg = res.data.data.captchaImg
+                this.loginForm.code=''
             })
         }
     },

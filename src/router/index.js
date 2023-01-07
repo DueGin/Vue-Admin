@@ -51,45 +51,47 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 
     // 存储是否已经加载路由，减少请求
-    let hasRoute = store.getters.hasRoute
-    if (!hasRoute) {
-        axios.post('/sys/menu/nav', { // 需要加上请求头
-            headers: {
-                Authorization: sessionStorage.getItem('token')
+    let trigger;
+    const p = new Promise(resolve => trigger = resolve)
+    axios.post('/sys/menu/nav', { // 需要加上请求头
+        headers: {
+            Authorization: sessionStorage.getItem('token')
+        }
+    }).then(res => {
+        // 存储menuList
+        store.commit("setMenuList", res.data.data.nav)
+        // 存储用户权限
+        store.commit("setPermList", res.data.data.perm)
+
+        let newRoutes = router.options.routes
+        // 动态绑定路由
+        res.data.data.nav.forEach(menu => {
+            if (menu.children) {
+                menu.children.forEach(e => {
+                    // 转成路由
+                    let route = menuToRoute(e)
+
+                    // 添加到路由管理
+                    if (route) {
+                        newRoutes[0].children.push(route)
+                    }
+                })
             }
-        }).then(res => {
-            // 存储menuList
-            store.commit("setMenuList", res.data.data.nav)
-            // 存储用户权限
-            store.commit("setPermList", res.data.data.perm)
+        })
+        // 把路由添加到路由管理器中
+        newRoutes.forEach(route => {
+            router.addRoute(route)
+        })
 
-            let newRoutes = router.options.routes
-            // 动态绑定路由
-            res.data.data.nav.forEach(menu => {
-                if (menu.children) {
-                    menu.children.forEach(e => {
-                        // 转成路由
-                        let route = menuToRoute(e)
-
-                        // 添加到路由管理
-                        if (route) {
-                            newRoutes[0].children.push(route)
-                        }
-                    })
-                }
-            })
-            // 把路由添加到路由管理器中
-            newRoutes.forEach(route=>{
-                router.addRoute(route)
-            })
-
-            // 存储
-            hasRoute = true
-            store.commit('changeRouteStatus', hasRoute)
+        trigger()
+    })
+    if (router.hasRoute(to.name)) {
+        next()
+    } else {
+        p.then(() => {
+            next(to)
         })
     }
-    console.log(router.options.routes)
-    next()
 })
 
 // 导航提取路由
@@ -107,7 +109,7 @@ const menuToRoute = menu => {
             title: menu.title,
         }
     }
-    route.component = () => import('@/views/sys/' + menu.component+'.vue')
+    route.component = () => import('@/views/sys/' + menu.component + '.vue')
     return route
 }
 

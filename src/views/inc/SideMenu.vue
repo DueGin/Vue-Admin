@@ -18,7 +18,7 @@
                 <template #title>
                     <el-icon>
                         <!--这里动态图标需要这么写-->
-                        <component class="icon" :is="menu.icon"></component>
+                        <component class="icon" :is="menu.icon"/>
                     </el-icon>
                     <span>{{ menu.title }}</span>
                 </template>

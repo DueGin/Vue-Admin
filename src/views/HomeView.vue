@@ -34,7 +34,9 @@
             </el-header>
             <el-main>
                 <Tabs></Tabs>
-                <router-view></router-view>
+                <div style="padding: 20px">
+                    <router-view></router-view>
+                </div>
             </el-main>
         </el-container>
     </el-container>
@@ -67,8 +69,8 @@ export default {
                 }
             })
         },
-        logout(){
-            axios.post('/logout').then(res=>{
+        logout() {
+            axios.post('/logout').then(res => {
                 sessionStorage.clear()
                 // 清除状态
                 this.$store.commit('resetState')
@@ -82,10 +84,11 @@ export default {
 </script>
 
 <style>
-a{
+a {
     text-decoration: none;
     color: unset;
 }
+
 /*布局*/
 .el-container {
     padding: 0;

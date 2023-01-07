@@ -6,16 +6,15 @@
 export default {
     name: 'App',
     watch: {
-        // $route(to, from) {
-        //     console.log(to, from)
-        //     if (to.path !== '/login' && to.path !== '/sys/index' && to.path !== '/') {
-        //         let obj = {
-        //             name: to.name,
-        //             title: to.meta.title
-        //         }
-        //         this.$store.commit('addTabs', obj)
-        //     }
-        // }
+        $route(to, from) {
+            if (to.path !== '/login' && to.path !== '/sys/index' && to.path !== '/') {
+                let obj = {
+                    name: to.name,
+                    title: to.meta.title
+                }
+                this.$store.commit('addTabs', obj)
+            }
+        }
     }
 }
 </script>
@@ -24,6 +23,7 @@ export default {
 
 html, body, #app {
     height: 100%;
+    margin: 0;
 }
 
 .app-container {
