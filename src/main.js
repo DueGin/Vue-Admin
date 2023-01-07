@@ -6,7 +6,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-// require("./mock.js") // 引入mock.js
+require("./mock.js") // 引入mock.js
 
 
 

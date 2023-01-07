@@ -18,11 +18,6 @@ const routes = [
                 },
                 component: () => import('../views/index')
             },
-            // {
-            //     path: '/sys/menu',
-            //     name: 'Menu',
-            //     component: () => import('../views/sys/Menu')
-            // },
             {
                 path: '/userCenter',
                 name: 'UserCenter',
@@ -50,7 +45,6 @@ const router = createRouter({
 // 将name与其路由的name绑定一块
 router.beforeEach((to, from, next) => {
 
-    // 存储是否已经加载路由，减少请求
     let trigger;
     const p = new Promise(resolve => trigger = resolve)
     axios.post('/sys/menu/nav', { // 需要加上请求头
